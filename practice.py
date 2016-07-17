@@ -34,11 +34,12 @@ def without_duplicates(words):
         [2, 33333, 111111]
     """
 
-    words_converted_to_set = set(words)
+    # Convert the given list of words to a set to remove all duplicates.
+    unique_words = set(words)
 
-    words_with_no_dupes = list(words_converted_to_set)
-
-    return words_with_no_dupes
+    # Convert the set of unique words back to a list, so it can be returned
+    # as the type the design description asked for.
+    return list(unique_words)
 
 
 def find_unique_common_items(items1, items2):
@@ -68,12 +69,17 @@ def find_unique_common_items(items1, items2):
         [2]
     """
 
+    # Convert the two passed lists of items into sets, so we can perform set
+    # math to find the elemnets they have in common.
     items1_converted_to_set = set(items1)
     items2_converted_to_set = set(items2)
 
+    # Find the intersection of unique items in the two passed lists.
     intersection = items1_converted_to_set & items2_converted_to_set
 
+    # Return the intersection as a list, as requested in the design description.
     return list(intersection)
+
 
 def get_sum_zero_pairs(numbers):
     """Given list of numbers, return list of pair summing to 0.
@@ -108,20 +114,20 @@ def get_sum_zero_pairs(numbers):
         for index in xrange(len(numbers)-1):
             if (number + numbers[index + 1] == 0):
                 dict_of_pairs[number] = dict_of_pairs.get(number,numbers[index+1])
-                print "Adding {},{} to dictionary.".format(number,numbers[index+1])
-            else:
-                print "{},{} does not sum to zero.".format(number,numbers[index+1])
+            #     print "Adding {},{} to dictionary.".format(number,numbers[index+1])
+            # else:
+            #     print "{},{} does not sum to zero.".format(number,numbers[index+1])
 
     set_of_keys = set(dict_of_pairs.keys())
     set_of_values = set(dict_of_pairs.values())
 
     keys_in_values = set_of_keys & set_of_values
 
-    print dict_of_pairs
+    #print dict_of_pairs
     return list_of_pairs
 
 
-get_sum_zero_pairs([1, 3, -1, 1, 1, 0])
+#get_sum_zero_pairs([1, 3, -1, 1, 1, 0])
 
 
 def top_chars(phrase):
@@ -149,14 +155,62 @@ def top_chars(phrase):
 
     """
 
+    # Call a function that returns a dictionary, where the keys are characters
+    # and each value is the number of times that character appears in the string.
+    char_counts = get_char_counts(phrase)
+
+    # Initialize a variable to track the highest number of times a letter occurs
+    highest_count = 0
+
+    # Iterate over the keys in char_counts to find the highest number of times
+    # a letter occurs. Set highest_count to that value.
+    for character in char_counts.iterkeys():
+        current_char_count = char_counts[character]
+        if current_char_count > highest_count:
+            highest_count = current_char_count
+
+    # Use list comprehension to find all characters in char_counts that have
+    # counts matching the highest count observed.
+    most_common_chars = [character for character in char_counts.iterkeys()
+                         if char_counts[character] == highest_count]
+
+    # Sort and return the list of most common characters.
+    return sorted(most_common_chars)
+
+
+def get_char_counts(string):
+    """Given a string, finds the number of times each character the string
+    contains appears. Ignores spaces.
+
+    Since this function counts characters, not letters, the counts are
+    case-sensitive.
+
+    Example:
+
+    >>> get_char_counts("I like turtles.")
+    {'e': 2, 'I': 1, 'k': 1, 'l': 2, '.': 1, 'i': 1, 's': 1, 'r': 1, 'u': 1, 't': 2}
+
+    NOTE: Written to encapsulate repeatable behavior and clean up top_chars()
+    function.
+
+    """
+
+    # Initialize an empty dictionary to contain character/count pairs.
     char_counts = {}
 
-    for character in phrase:
+    # Remove all spaces (" ") from the passed string.
+    string = string.replace(" ", "")
+
+    # Iterate over all characters in string. If there's no key/value pair for
+    # a given character, add it to the dictionary with a count of 1. Otherwise,
+    # Increment the count.
+    for character in string:
+
+        # Note: to count letters rather than characters, this could
+        # have set the character read to character.lower().
         char_counts[character] = char_counts.get(character, 0) + 1
 
-    print char_counts
-
-    return []
+    return char_counts
 
 #####################################################################
 # You can ignore everything below this.
@@ -177,9 +231,9 @@ def sort_pairs(l):
     return sorted(sorted(pair) for pair in l)
 
 
-# if __name__ == "__main__":
-#     print
-#     import doctest
-#     if doctest.testmod().failed == 0:
-#         print "*** ALL TESTS PASSED ***"
-#     print
+if __name__ == "__main__":
+    print
+    import doctest
+    if doctest.testmod().failed == 0:
+        print "*** ALL TESTS PASSED ***"
+    print
