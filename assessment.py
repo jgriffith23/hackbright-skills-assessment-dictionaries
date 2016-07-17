@@ -220,19 +220,66 @@ def kids_game(names):
     good solutions here will definitely require a dictionary.
     """
 
-    names_by_last_letter = {}
+    # Initialize an empty dictionary to contain our words grouped by first
+    # letter. That should allow us to look up all words that start with a
+    # particular letter.
+    names_by_first_letter = {}
 
+    # Iterate over names in passed list.
     for name in names:
-        last_letter = name[-1]
-        names_by_last_letter[last_letter] = names_by_last_letter.get(last_letter, [])
-        names_by_last_letter[last_letter].append(name)
 
-    first_word = names[0]
+        # Get the first letter of the name.
+        first_letter = name[0]
 
-    print names_by_last_letter
-    
+        # If that letter is not in the dictionary, add it with a value of []. Either way,
+        # append the name we're currently looking at. Creating the list this way
+        # ensures that the words will appear in the order given by the passed list.
+        names_by_first_letter[first_letter] = names_by_first_letter.get(first_letter, [])
+        names_by_first_letter[first_letter].append(name)
 
-    return []
+    # Initialize an empty list for our final game list.
+    silly_list = []
+
+    # Set the current word to the first word the user passed.
+    current_word = names[0]
+
+    # Set state variable to True. It should remain True until we're done
+    # creating the silly list of words.
+    creating_list = True
+
+    # As long as we're still creating the list...
+    while creating_list:
+
+        # Append the word we're currently looking at to that list.
+        silly_list.append(current_word)
+
+        # Remove the current word from the list associated with the word's
+        # first letter in our dictionary, since we don't want to us the same
+        # word twice.
+
+        # In the given example, names_by_first_letter has the following key/value pair:
+        #     'b': ['bagon', 'baltoy', 'booger']
+
+        # When current_word is 'bagon', current_word[0] is 'b'. So this line would
+        # remove 'bagon' from the 'b' key's associated list of words.
+        names_by_first_letter[current_word[0]].remove(current_word)
+
+        # Get the last letter of the current word, so we can pick the next word.
+        last_letter = current_word[-1]
+
+        # If the list associated with the last_letter in our dictionary
+        # is not empty (that is, if we haven't removed all words from
+        # it), then update the current word to be the first remaining word in
+        # that list.
+        if names_by_first_letter[last_letter] != []:
+            current_word = names_by_first_letter[last_letter][0]
+
+        # Otherwise, we must be done. Update state variable to False to end
+        # the loop.
+        else:
+            creating_list = False
+
+    return silly_list
 
 #####################################################################
 # You can ignore everything below this.
