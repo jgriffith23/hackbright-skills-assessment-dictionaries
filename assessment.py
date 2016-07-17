@@ -29,8 +29,25 @@ def count_words(phrase):
         {'Porcupine': 1, 'do.': 1, 'porcupine': 1, 'see,': 1}
     """
 
-    return {}
+    # Split string into words, along spaces.
+    phrase = phrase.split(" ")
 
+    # Initialize empty dictionary to contain word counts.
+    word_counts = {}
+
+    # Iterate over words in provided string.
+    for word in phrase:
+
+        # Try to get the value for the current word in word_counts. If a key
+        # exists for the current word, increment its count. Otherwise, add it
+        # to word_counts with a value of 1.
+        word_counts[word] = word_counts.get(word, 0) + 1
+
+    return word_counts
+
+# Rather than define what could easily become a rather large data structure
+# here, import it from a separate file.
+from melon_data import melons
 
 def get_melon_price(melon_name):
     """Given a melon name, return the price of the melon
@@ -47,12 +64,17 @@ def get_melon_price(melon_name):
 
         >>> get_melon_price('Musk')
         3.25
-        
+
         >>> get_melon_price('Tomato')
         'No price found'
     """
 
-    return 0
+    # If Ubermelon does stock the melon, return the actual price from our 
+    # dictionary. Otherwise, tell the user there is no price for that melon.
+    if melon_name in melons:
+        return melons[melon_name]
+    else: 
+        return "No price found"
 
 
 def word_length_sorted(words):
@@ -71,8 +93,33 @@ def word_length_sorted(words):
         [(1, ['a']), (2, ['an', 'ok']), (3, ['day']), (5, ['apple'])]
     """
 
-    return []
+    # Initialize an empty dictionary to contain word lengths.
+    word_lengths = {}
 
+    # Iterate over the list of words.
+    for word in words:
+
+        # Get the current word's length.
+        length = len(word)
+
+        # If the length exists as a key in our dictionary, append the current
+        # word to the key's value, which is a list. Else, create the key and
+        # add the current word as its value.
+        word_lengths[length] = word_lengths.get(length, [])
+        word_lengths[length].append(word)
+
+    # Use list comprehension to create a list of tuples of the form
+    # (length, sorted(words of that length)).
+    word_lengths_as_tuples = [(length, sorted(word_lengths[length])) for length
+                              in word_lengths]
+
+    # We just made the list of tuples from a dictionary, so there's no
+    # gurantee it's sorted by word length. Sort just in case, and return.
+    return sorted(word_lengths_as_tuples)
+
+# Import official English-to-Pirate Dictionary, so we can look up words
+# for our automatic translation program.
+from english_to_pirate_dictionary import english_to_pirate
 
 def translate_to_pirate_talk(phrase):
     """Translate phrase to pirate talk.
@@ -113,8 +160,27 @@ def translate_to_pirate_talk(phrase):
         'me swabbie be not a man!'
     """
 
-    return ""
 
+    # Split the passed phrase along spaces so we can operate on individual
+    # words as needed.
+    phrase = phrase.split(" ")
+
+    # Initialize an empty list to contain our pirate-ized phrase.
+    pirate_phrase = []
+
+    # Iterate over the words in the passed phrase
+    for word in phrase:
+
+        # Look the word up in the dictionary. If it's there, swap the English
+        # word we're looking at for the pirate version. Otherwise, do nothing.
+        if word in english_to_pirate:
+            word = english_to_pirate[word]
+
+        # Append the word to the pirate-ized list of words.
+        pirate_phrase.append(word)
+
+    # Join the translated list of words to create one phrase.
+    return " ".join(pirate_phrase)
 
 def kids_game(names):
     """Play a kids' word chain game.
@@ -153,6 +219,18 @@ def kids_game(names):
     a dictionary (with the super-fast lookup they provide) can help;
     good solutions here will definitely require a dictionary.
     """
+
+    names_by_last_letter = {}
+
+    for name in names:
+        last_letter = name[-1]
+        names_by_last_letter[last_letter] = names_by_last_letter.get(last_letter, [])
+        names_by_last_letter[last_letter].append(name)
+
+    first_word = names[0]
+
+    print names_by_last_letter
+    
 
     return []
 
