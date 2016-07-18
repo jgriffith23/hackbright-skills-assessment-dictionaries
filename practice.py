@@ -107,27 +107,39 @@ def get_sum_zero_pairs(numbers):
         >>> sort_pairs( get_sum_zero_pairs([1, 3, -1, 1, 1, 0]) )
         [[-1, 1], [0, 0]]
     """
-    dict_of_pairs = {}
-    list_of_pairs = []
 
+    # Initialize an empty dictionary to contain pairs
+    pairs_dict = {}
+
+    # Iterate over the list of numbers
     for number in numbers:
-        for index in xrange(len(numbers)-1):
-            if (number + numbers[index + 1] == 0):
-                dict_of_pairs[number] = dict_of_pairs.get(number,numbers[index+1])
-            #     print "Adding {},{} to dictionary.".format(number,numbers[index+1])
-            # else:
-            #     print "{},{} does not sum to zero.".format(number,numbers[index+1])
 
-    set_of_keys = set(dict_of_pairs.keys())
-    set_of_values = set(dict_of_pairs.values())
+        # First, check to see if the current number is in the dictionary's set of
+        # values. If it is, we don't need to do anything, because this pair exists.
+        if not number in pairs_dict.values():
 
-    keys_in_values = set_of_keys & set_of_values
+            # To access numbers after current number, iterate over indices in list.
+            for index in xrange(len(numbers)-1):
 
-    #print dict_of_pairs
-    return list_of_pairs
+                # Fetch next number after current number
+                next_num = numbers[index + 1]
 
+                # If the sum is 0, check whether the key exists. Add the pair
+                # to the dictionary if not.
+                if (number + next_num == 0):
+                    pairs_dict[number] = pairs_dict.get(number,next_num)
 
-#get_sum_zero_pairs([1, 3, -1, 1, 1, 0])
+    # Initialize an empty list to contain pairs converted to lists.
+    pairs_list = []
+
+    # Iterate over the items in the dictionary.
+    for pair in pairs_dict.items():
+
+        # Convert each dictionary item into a list, and add it to the list
+        # to return.
+        pairs_list.append(list(pair))
+
+    return pairs_list
 
 
 def top_chars(phrase):
